@@ -1,16 +1,22 @@
+import React from 'react'; // Adicione esta linha
+import hexToRgba from 'hex-to-rgba';
 import Colaborador from '../Colaborador'
 import './time.css'
 
-const Time = ({ time, colaboradores }) => {
+const Time = ({ time, colaboradores, aoDeletar, mudarCor, aoFavoritar }) => {
     return (
-
-        colaboradores.length > 0 && <section className='time' style={{ backgroundImage: 'url(/imagens/fundo.png)', backgroundColor: time.corPrimaria }}>
-            <h3 style={{ borderColor: time.corSecundaria }}>{time.nome}</h3>
+        colaboradores.length > 0 && <section className='time' style={{ backgroundImage: 'url(/imagens/fundo.png)', backgroundColor: hexToRgba(time.cor, '0.6') }}>
+            <input type='color' onChange={evento => mudarCor(evento.target.value, time.id)} value={time.cor} className='input-cor' />
+            <h3 style={{ borderColor: time.cor }}>{time.nome}</h3>
             <div className='colaboradores'>
-                {colaboradores.map((colaborador, indice) => <Colaborador key={indice} colaborador={colaborador} corDeFundo={time.corSecundaria} />)}
+                {colaboradores.map((colaborador, indice) => {
+                    // Esta arrow function "() => aoDeletar(colaborador.id)" permite que o colaborador seja excluido apenas no click,
+                    // se ela não existisse ao renderizar a pagina a função aoDeletar seria executada e todos os cards seriam excluidos."
+                    // Pois "aoDeletar(colaborador.id)" é a execução da função aoDeletar.
+                    return <Colaborador key={indice} colaborador={colaborador} corDeFundo={time.cor} aoDeletar={() => aoDeletar(colaborador.id)} aoFavoritar={aoFavoritar} />
+                })}
             </div>
         </section>
-
     )
 }
 
